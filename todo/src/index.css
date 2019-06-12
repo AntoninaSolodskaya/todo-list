@@ -11,3 +11,46 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+ul {
+  list-style-type: none;
+}
+
+input {
+  border: 1px solid lightgray;
+}
+
+button,
+input {
+  font-size: 16px;
+  height: 30px;
+  vertical-align: middle;
+  outline: none;
+  border-radius: 5px;
+}
+
+button {
+  font-weight: bold;
+  margin-left: 10px;
+  width: 30px;
+  border: none;
+}
+
+.title-wrap {
+  margin-bottom: 10px;
+}
+
+.lists-wrap > ul {
+  padding-left: 0;
+}
+
+.add {
+  background-color: blue;
+  color: #ffffff;
+}
+
+.remove {
+  background-color: red;
+  color: #ffffff;
+}
+

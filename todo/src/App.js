@@ -9,7 +9,6 @@ class App extends React.Component {
 
   setRootInput = e => {
     this.setState({ rootInput: e.target.value });
-    console.log("rootInput", this.state.rootInput)
   };
 
   addToRoot = e => {
@@ -27,7 +26,30 @@ class App extends React.Component {
 
     console.log("newElem", newElem)
     console.log("list", this.state.list)
-  }
+  };
+
+  parseList = item => (
+    <li key={item.id}>
+      <div className="title-wrap">
+         {item.title}
+        <button 
+          type="button"
+          className="add"
+        >
+          +
+        </button>
+        <button 
+          type="button"
+          className="remove"
+        >
+          -
+        </button>
+      </div>
+      {item.children && item.children.length > 0 && (
+        <ul>{item.children.map(this.parseList)}</ul>
+      )}
+    </li>
+  );
 
   render () {
 
@@ -44,7 +66,11 @@ class App extends React.Component {
               />
               <button className="add">+</button>
             </form>
-            
+            <div className="list-wrap">
+              {this.state.list.length > 0 && (
+                <ul>{this.state.list.map(this.parseList)}</ul>
+              )}
+            </div>
           </div>
         </header>
       </div>
