@@ -1,36 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-class App extends React.Component {
+function TodoApp() {
+  const [list, setList] = useState([]);
+  const [rootInput, setItem] = useState("");
 
-  state = {
-    list: [],
-    rootInput: ""
-  };
-
-  setRootInput = e => {
-    this.setState({ rootInput: e.target.value });
-  };
-
-  addToRoot = e => {
+  const addToRoot = e => {
     e.preventDefault();
 
     const newElem = {
       id: Date.now(),
-      title: this.state.rootInput
+      title: rootInput
     };
 
-    this.setState({
-      list: [...this.state.list, newElem],
-      rootInput: ""
-    });
-
+    setList([...list, newElem]);
+    
     console.log("newElem", newElem)
-    console.log("list", this.state.list)
+    console.log("list", list)
   };
 
-  addInnerElem = parentId => {
+  const addInnerElem = parentId => {
     const title = prompt("Enter title", "");
-    let list = [...this.state.list];
+    let newList = [...list];
 
     const findElembyId = (arr, elemId, action) => {
       for (let i = 0; i < arr.length; i++) {
@@ -44,8 +34,8 @@ class App extends React.Component {
           findElembyId(arr[i].children, elemId, action);
           console.log(arr[i].children)
         }
-      }  
-    }
+      }
+    };
 
     const addElem = parentElem => {
 
@@ -55,21 +45,20 @@ class App extends React.Component {
       };
 
       console.log("newElem", newElem);
-
       if (!parentElem.children) {
         parentElem.children = [];
       }
       parentElem.children.push(newElem);
-      this.setState({ list })
+      setList(newList);
+      setItem("")
     };
+      console.log("parentId", parentId)
+      console.log("list", list)
+      findElembyId(list, parentId, addElem)
+  };
 
-    console.log("parentId", parentId)
-    console.log("list", this.state.list)
-    findElembyId(list, parentId, addElem)
-  }
-
-  removeElem = id => {
-    let list = [...this.state.list];
+  const removeElem = id => {
+    let todoList = [...list];
 
     const findParentElem = (arr, elemId, action) => {
       if (arr.some(item => item.id === elemId)) {
@@ -89,62 +78,58 @@ class App extends React.Component {
       const elemIndex = parentArr.indexOf(elem);
 
       parentArr.splice(elemIndex, 1);
-      this.setState({ list });
+
+      setList(todoList);
     };
 
-    findParentElem(list, id, removeElemById);
+    findParentElem(todoList, id, removeElemById);
   };
 
-  parseList = (item, index) => (
+  const parseList = (item, index) => (
     <li key={index}>
-      <div className="title-wrap">
-         {item.title}
+      <div className="title-wrap"> 
+        {item.title}
         <button 
           type="button"
           className="add"
-          onClick={() => this.addInnerElem(item.id)}
+          onClick={() => addInnerElem(item.id)}
         >
           +
         </button>
         <button 
           type="button"
           className="remove"
-          onClick={() => this.removeElem(item.id)}
+          onClick={() => removeElem(item.id)}
         >
           -
         </button>
-      </div>
+      </div> 
       {item.children && item.children.length > 0 && (
-        <ul>{item.children.map(this.parseList)}</ul>
+        <ul>{item.children.map((item, index) => parseList(item, index))}</ul> 
       )}
     </li>
   );
 
-  render () {
-
-    const { rootInput } = this.state;
-
-    return (
-      <div className="App">
-        <header className="App-header">
-          <div className="main">
-            <form onSubmit={e => this.addToRoot(e)}>
-              <input
-                value={rootInput}
-                onChange={e => this.setRootInput(e)}
-              />
-              <button className="add">+</button>
-            </form>
-            <div className="list-wrap">
-              {this.state.list.length > 0 && (
-                <ul>{this.state.list.map(this.parseList)}</ul>
-              )}
-            </div>
+  return (
+    <div className="App">
+      <header className="App-header">
+        <div className="main">
+          <form onSubmit={e => addToRoot(e)}>
+            <input
+              value={rootInput}
+              onChange={e => setItem(e.target.value)} 
+            />
+            <button className="add">+</button>
+          </form>
+          <div className="list-wrap">
+            {list.length > 0 && (
+              <ul>{list.map((item, index) => parseList(item, index))}</ul>
+            )}
           </div>
-        </header>
-      </div>
-    );
-  }  
+        </div>
+      </header>
+    </div>
+  );
 };
 
-export default App;
+export default TodoApp;
