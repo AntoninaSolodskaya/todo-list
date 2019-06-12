@@ -28,6 +28,46 @@ class App extends React.Component {
     console.log("list", this.state.list)
   };
 
+  addInnerElem = parentId => {
+    const title = prompt("Enter title", "");
+    let list = [...this.state.list];
+
+    const findElembyId = (arr, elemId, action) => {
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].id === elemId) {
+          action(arr[i]);
+          console.log("arr[i].id", arr[i].id)
+          console.log("elemId", elemId)
+          break;
+        } 
+        if (arr[i].children) {
+          findElembyId(arr[i].children, elemId, action);
+          console.log(arr[i].children)
+        }
+      }  
+    }
+
+    const addElem = parentElem => {
+
+      const newElem = {
+        id: Date.now(),
+        title
+      };
+
+      console.log("newElem", newElem);
+
+      if (!parentElem.children) {
+        parentElem.children = [];
+      }
+      parentElem.children.push(newElem);
+      this.setState({ list })
+    };
+
+    console.log("parentId", parentId)
+
+    findElembyId(list, parentId, addElem)
+  }
+
   parseList = item => (
     <li key={item.id}>
       <div className="title-wrap">
@@ -35,6 +75,7 @@ class App extends React.Component {
         <button 
           type="button"
           className="add"
+          onClick={() => this.addInnerElem(item.id)}
         >
           +
         </button>
