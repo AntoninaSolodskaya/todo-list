@@ -13,7 +13,7 @@ function TodoApp() {
     };
 
     setList([...list, newElem]);
-    
+    setItem("")
     console.log("newElem", newElem)
     console.log("list", list)
   };
